@@ -79,7 +79,7 @@ Exemplos:
 
 ```bash
 # Um processo isolado
-legaldata datajud 00194332920248160001 -o resultado.db
+legaldata datajud 00008323520184013202 -o resultado.db
 
 # CSV com N números de processo
 legaldata datajud --csv processos.csv -o resultado.db
@@ -181,6 +181,11 @@ Arquivo DuckDB com até 6 tabelas:
 
 Todas as tabelas DJEN incluem a coluna `processo` (número CNJ) para join direto com `processos`.
 
+>[!Caution]
+> Os Tribunais não têm cuidado na aderência com o contrato de API do DJEN e exitem erros.
+> É comum que Tribunais com EPROC lancem o numero da OAB do advogado de forma errada.
+> É comum que o nome das partes tenha variações e esteja incorreto.
+
 ### Exemplos de consulta
 
 ```sql
@@ -190,7 +195,7 @@ FROM processos GROUP BY 1, 2 ORDER BY 1, 2;
 
 -- movimentos de um processo
 SELECT movimento_data, movimento_nome
-FROM movimentos WHERE id LIKE '%00194332920248160001%'
+FROM movimentos WHERE id LIKE '%00008323520184013202%'
 ORDER BY movimento_seq;
 
 -- advogados com mais processos
