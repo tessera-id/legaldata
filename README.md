@@ -149,7 +149,7 @@ O mapeamento completo de códigos CNJ → endpoints está em `src/legaldata/trib
 ```
 src/legaldata/
 ├── cli.py          # Comandos: datajud, djen, exportar, dashboard
-├── api.py          # Fetch concorrente DataJud (30 workers + retry)
+├── datajud.py      # Fetch concorrente DataJud (30 workers + retry)
 ├── djen.py         # Fetch sequencial DJEN (1s delay, retry 429)
 ├── parser.py       # Parse número CNJ → (digits, tribunal)
 ├── storage.py      # Persistência DuckDB (DataJud + DJEN)

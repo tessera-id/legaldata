@@ -10,7 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich import box
 
-from legaldata.api import fetch_all
+from legaldata.datajud import fetch_all
 from legaldata.dashboard import serve
 from legaldata.djen import fetch_djen
 from legaldata.parser import parse_cnj
