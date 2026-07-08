@@ -1,3 +1,8 @@
+---
+title: legaldata app para dados judiciais Datajud+DJEN
+author: Alceu Eilert Nascimento
+date: 2026-06-24
+---
 # legaldata
 
 CLI para coletar dados judiciais das APIs públicas do CNJ e persistir em DuckDB.
@@ -25,9 +30,19 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-Fechar e reabrir o terminal após instalar. Python 3.14+ **não precisa estar instalado** o uv baixa automaticamente.
+Fechar e reabrir o terminal após instalar. 
+
+Instalar o python
+
+```bash
+uv python install 3.14
+```
+
+O uv baixa automaticamente o python da distribuição da própria Astral.
 
 ### Instalação do legaldata app
+
+Faça o clone do repositorio em alguma pasta local que contém seus repositórios.
 
 Via HTTPS
 ```bash
@@ -39,7 +54,7 @@ Via SSH
 git clone git@github.com:tessera-id/legaldata.git
 ```
 
-Instalação via `uv tool`
+Instalação do legaldata app via `uv tool`
 
 ```bash
 uv tool install .
@@ -52,6 +67,15 @@ Isto disponibiliza o comando `legaldata` globalmente.
 ### `datajud` — DataJud
 
 Busca processos na API do DataJud e salva em DuckDB.
+
+```bash
+# padrão para um processo
+legaldata datajud <numero do processo> -o <nome que quiser dar ao arquivo>.db
+# padrão para varios processos em um arquivo.csv
+legaldata datajud --casv <nome do arquivo>.csv -o <nome que quiser dar ao arquivo>.db
+```
+
+Exemplos:
 
 ```bash
 # Um processo isolado
@@ -143,7 +167,9 @@ Arquivo DuckDB com até 6 tabelas:
 | `movimentos` | `id, movimento_seq` | Histórico de movimentação |
 | `assuntos` | `id, assunto_seq` | Assuntos do processo |
 
-> O mesmo `numeroProcesso` CNJ pode ter múltiplos registros com graus distintos (G1, G2...). O campo `id` do DataJud (`Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso`) é a chave primária real.
+> [!Note]
+> O mesmo `numeroProcesso` CNJ pode ter múltiplos registros com graus distintos (G1, G2...). 
+> O campo `id` do DataJud (`Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso`) é a chave primária real.
 
 ### DJEN
 
@@ -187,9 +213,13 @@ ORDER BY c.data_disponibilizacao DESC;
 |----------|---|-----------|
 | Justiça Estadual (TJ) | 8 | AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP TO |
 | Justiça do Trabalho (TRT) | 5 | TRT 1–24 |
-| Justiça Federal (TRF) | 4 | TRF 1–6 (inclui JFPR, JFSC, JFRS via `api_publica_trf4`) |
+| Justiça Federal (TRF) | 4 | TRF 1–6 |
 
-O mapeamento completo de códigos CNJ → endpoints está em `src/legaldata/tribunais.toml`.
+O mapeamento completo de códigos CNJ e endpoints está em `src/legaldata/tribunais.toml`.
+
+>[!Note]
+> O TRF4 inclui JFPR, JFSC, JFRS via endpoint `api_publica_trf4`.
+
 
 ## Estrutura
 
@@ -198,7 +228,7 @@ src/legaldata/
 ├── cli.py          # Comandos: datajud, djen, exportar, dashboard
 ├── datajud.py      # Fetch concorrente DataJud (30 workers + retry)
 ├── djen.py         # Fetch sequencial DJEN (1s delay, retry 429)
-├── parser.py       # Parse número CNJ → (digits, tribunal)
+├── parser.py       # Parse número CNJ (digits, tribunal)
 ├── storage.py      # Persistência DuckDB (DataJud + DJEN)
 ├── dashboard.py    # Dashboard HTML + servidor HTTP local
 ├── xlsx.py         # Exporta todas as tabelas do DuckDB para um único XLSX
