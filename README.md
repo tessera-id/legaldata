@@ -11,11 +11,41 @@ CLI para coletar dados judiciais das APIs públicas do CNJ e persistir em DuckDB
 
 ## Instalação
 
+### Pré-requisito: instalar o uv
+
+`uv` é o único pré-requisito, ele gerencia Python, dependências e o install do CLI.
+
+**Linux / macOS:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Windows (PowerShell):**
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Fechar e reabrir o terminal após instalar. Python 3.14+ **não precisa estar instalado** o uv baixa automaticamente.
+
+### Instalação do legaldata app
+
+Via HTTPS
+```bash
+git clone https://github.com/tessera-id/legaldata.git
+```
+
+Via SSH
+```bash
+git clone git@github.com:tessera-id/legaldata.git
+```
+
+Instalação via `uv tool`
+
 ```bash
 uv tool install .
 ```
 
-Disponibiliza o comando `legaldata` globalmente.
+Isto disponibiliza o comando `legaldata` globalmente.
 
 ## Comandos
 
@@ -31,9 +61,13 @@ legaldata datajud 00194332920248160001 -o resultado.db
 legaldata datajud --csv processos.csv -o resultado.db
 ```
 
-O CSV deve ter um número por linha (20 dígitos, com ou sem formatação). Duplicatas são removidas automaticamente.
+> [!Importante]
+> O CSV deve ter um número por linha (20 dígitos, com ou sem formatação). 
+> Duplicatas são removidas automaticamente.
 
-Números CNJ já presentes no banco de saída são pulados automaticamente (não são buscados de novo na API). Para forçar um novo fetch completo, apague o arquivo `.db` antes de rodar.
+> [!Note]
+> Números CNJ já presentes no banco de saída não são buscados de novo na API. 
+> Para forçar um novo fetch completo, apague o arquivo `.db` antes de rodar.
 
 Fetch concorrente com 30 workers + retry automático (5 workers após 15s) em caso de 429/timeout.
 
