@@ -104,6 +104,19 @@ Tabelas disponíveis: `processos`, `movimentos`, `assuntos`, `comunicacoes`, `pa
 
 ---
 
+### `xlsx` — XLSX
+
+Exporta todas as tabelas do DuckDB para um único arquivo XLSX, uma aba por tabela.
+
+```bash
+legaldata xlsx resultado.db
+legaldata xlsx resultado.db --dir ./exports
+```
+
+Arquivo gerado: `<db>_YYYYMMDDHHMMSS.xlsx`. Inclui uma aba extra "Orientações" com a descrição, chave primária e contagem de linhas de cada tabela exportada.
+
+---
+
 ### `dashboard` — HTML
 
 Abre dashboard HTML no browser com estatísticas do banco.
@@ -188,6 +201,7 @@ src/legaldata/
 ├── parser.py       # Parse número CNJ → (digits, tribunal)
 ├── storage.py      # Persistência DuckDB (DataJud + DJEN)
 ├── dashboard.py    # Dashboard HTML + servidor HTTP local
+├── xlsx.py         # Exporta todas as tabelas do DuckDB para um único XLSX
 ├── helpers.py      # parse_date, parse_datetime, safe_int, format_cnj
 └── tribunais.toml  # Mapeamento de códigos CNJ por segmento
 ```

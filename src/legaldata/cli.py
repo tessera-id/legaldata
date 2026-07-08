@@ -15,6 +15,7 @@ from legaldata.dashboard import serve
 from legaldata.djen import fetch_djen
 from legaldata.parser import parse_cnj
 from legaldata.storage import save, djen_save
+from legaldata.xlsx import export_xlsx
 
 app = typer.Typer(
     name="legaldata",
@@ -328,6 +329,46 @@ def exportar(
     con.close()
 
     console.print(f"[bold green]✓[/bold green] Exportado: [bold]{out_path}[/bold]  [dim]({n_rows} linhas)[/dim]")
+
+
+@app.command()
+def xlsx(
+    db: Path = typer.Argument(..., help="Arquivo DuckDB de origem"),
+    destino: Optional[Path] = typer.Option(None, "--dir", "-d", help="Diretório de saída (padrão: diretório atual)"),
+) -> None:
+    """[bold]Exporta todas as tabelas[/bold] do DuckDB para um único arquivo XLSX.
+
+    \b
+    Cada tabela vira uma aba, mais uma aba "Orientações" com descrição,
+    chave primária e contagem de linhas de cada tabela exportada.
+
+    \b
+    Exemplos:
+      legaldata xlsx resultado.db
+      legaldata xlsx resultado.db --dir ./exports
+    """
+    _header()
+
+    if not db.exists():
+        console.print(f"[red]Erro:[/red] arquivo não encontrado: [bold]{db}[/bold]")
+        raise typer.Exit(1)
+
+    ts = datetime.now().strftime("%Y%m%d%H%M%S")
+    fname = f"{db.stem}_{ts}.xlsx"
+    out_dir = destino or Path(".")
+    out_path = out_dir / fname
+
+    console.print(f"  Exportando [bold]{db}[/bold] → [bold]{out_path}[/bold]...\n")
+
+    contagens = export_xlsx(str(db), str(out_path))
+
+    t = Table(box=box.ROUNDED, border_style="green", show_header=False, padding=(0, 2))
+    t.add_column(style="dim")
+    t.add_column(style="bold green", justify="right")
+    for tabela, n in contagens.items():
+        t.add_row(tabela, f"{n} linhas")
+    t.add_row("Arquivo", f"[bold]{out_path}[/bold]")
+    console.print(Panel(t, title="[bold green]XLSX Exportado[/bold green]", border_style="green", expand=False))
 
 
 @app.command()
