@@ -173,10 +173,10 @@ Arquivo DuckDB com até 6 tabelas:
 
 Pelo Glossário do Datajud temos:
 
-| Atributos | Tipo | Descrição
-| --- | --- |
-| id | text/keyword | Identificador da origem do processo no Datajud - Chave Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso
-| numeroProcesso | text/keyword | Numeração Única (CNJ) do processo sem formatação
+| Atributos | Tipo | Descrição |
+| --------- | ---- | --------- |
+| id | text/keyword | Identificador da origem do processo no Datajud - Chave Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso |
+| numeroProcesso | text/keyword | Numeração Única (CNJ) do processo sem formatação |
 
 Verifica-se que o `id` é uma concatenação das variáveis `Tribunal`, `Classe`, `Grau`, `OrgaoJulgador`, e `NumeroProcesso`.
 Um processo `00008323520184013202` vira `TJPR_7_G1_8789_00008323520184013202`, sendo `{Tribunal}_{Classe}_{Grau}_{OrgaoJulgador}_00008323520184013202`.
@@ -290,7 +290,7 @@ O CNJ adota um racional de 6 campos obrigatórios (NNNNNNN-DD.AAAA.J.TR.OOOO), s
 Para os órgãos do Poder Judiciário, o (J) adota os seguintes numeros:
 
 | órgão | numero
-| --- | 
+| --- | ---
 | Supremo Tribunal Federal | 1
 | Conselho Nacional de Justiça | 2
 | Superior Tribunal de Justiça | 3
