@@ -5,7 +5,7 @@ date: 2026-06-24
 ---
 # legaldata
 
-CLI para coletar dados judiciais das APIs públicas do CNJ e persistir em DuckDB.
+CLI para coletar dados de processos judiciais das APIs públicas do CNJ (Datajud e DJEN) e persistir em DuckDB.
 
 ## APIs
 
@@ -237,16 +237,16 @@ ORDER BY c.data_disponibilizacao DESC;
 
 ## Tribunais suportados
 
-| Segmento | J | Cobertura |
-|----------|---|-----------|
-| Justiça Estadual (TJ) | 8 | AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP TO |
-| Justiça do Trabalho (TRT) | 5 | TRT 1–24 |
-| Justiça Federal (TRF) | 4 | TRF 1–6 |
+| Segmento | Cobertura |
+|----------|-----------|
+| Justiça Estadual | AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP TO |
+| Justiça do Trabalho | TRT 1–24 |
+| Justiça Federal | TRF 1–6 |
 
 O mapeamento completo de códigos CNJ e endpoints está em `src/legaldata/tribunais.toml`.
 
 >[!Note]
-> O TRF4 inclui JFPR, JFSC, JFRS via endpoint `api_publica_trf4`.
+> Os TRFN incluem as JFUF via endpoint único `api_publica_trfN`.
 
 
 ## Estrutura
@@ -271,3 +271,240 @@ uv run legaldata datajud --csv references/processos.csv -o resultado.db
 uv run legaldata djen resultado.db
 uv run pytest -v
 ```
+
+## Apendice
+
+### Númeração única de processos no Pode Judiciário (NNNNNNN-DD.AAAA.J.TR.OOOO)
+
+O CNJ adota um racional de 6 campos obrigatórios (NNNNNNN-DD.AAAA.J.TR.OOOO), sendo:
+ 
+- (NNNNNNN): 7 dígitos, identifica o número seqüencial do processo por unidade de origem (OOOO), a ser reiniciado a cada ano;
+- (DD): 2 dígitos, identifica o dígito verificador, algoritmo Módulo 97 Base 10, ISO 7064:2003;
+- (AAAA): 4 dígitos, identifica o ano do ajuizamento do processo;
+- (J): 1 dígito, identifica o órgão ou segmento do Poder Judiciário de 1 a 9;
+- (TR): 2 dígitos, identifica o tribunal do respectivo segmento do Poder Judiciário e, na Justiça Militar da União, a Circunscrição Judiciária; 
+- (OOOO): 4 dígitos, identifica a unidade de origem do processo, observadas as estruturas administrativas dos segmentos do Poder Judiciário.
+
+### Órgãos do Poder Judiciário (J)
+
+Para os órgãos do Poder Judiciário, o (J) adota os seguintes numeros:
+
+| órgão | numero
+| --- | 
+| Supremo Tribunal Federal | 1
+| Conselho Nacional de Justiça | 2
+| Superior Tribunal de Justiça | 3
+| Justiça Federal | 4
+| Justiça do Trabalho | 5
+| Justiça Eleitoral | 6
+| Justiça Militar da União | 7
+| Justiça dos Estados e do Distrito Federal e Territórios | 8
+| Justiça Militar Estadual | 9
+
+### Tribunais dos Órgãos do Poder Judiciário (TR)
+
+#### Tribunais Superiores
+
+Para os Tribunais Superiores, o (TR) adota os seguintes numeros:
+
+| tribunal | numero
+| --- | --- 
+| Supremo Tribunal Federal | 00
+| Conselho Nacional de Justiça | 00
+| Superior Tribunal de Justiça | 00
+| Tribunal Superior do Trabalho | 00
+| Tribunal Superior Eleitoral | 00
+| Superior Tribunal Militar | 00
+| Conselho da Justiça Federal | 90
+| Conselho Superior da Justiça do Trabalho | 90
+
+#### Justiça Federal - Tribunais Regionais Federais
+
+Para a Justiça Federal os Tribunais Regionais Federais adotam como (TR) os seguintes numeros:
+
+| tribunal | numero
+| --- | --- 
+| Justiça Federal - TRF 1ª Região | 01
+| Justiça Federal - TRF 2ª Região | 02
+| Justiça Federal - TRF 3ª Região | 03
+| Justiça Federal - TRF 4ª Região | 04
+| Justiça Federal - TRF 5ª Região | 05
+| Justiça Federal - TRF 6ª Região | 06
+
+#### Justiça do Trabalho - Tribunais Regionais do Trabalho
+
+Para a Justiça do Trabalho os Tribunais Regionais do Trabalho adotam como (TR) os seguintes numeros:
+
+| tribunal | numero
+| --- | --- 
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 1ª Região | 01
+| TRT 24ª Região | 24
+
+#### Justiça Eleitoral - Tribunais Regionais Eleitorais
+
+Para a Justiça Eleitoral os Tribunais Regionais Eleitorais adotam como (TR) os seguintes numeros:
+
+| tribunal | numero
+| --- | --- 
+| TRE AC | 01
+| TRE AL | 02
+| TRE AP | 03
+| TRE AM | 04
+| TRE BA | 05
+| TRE CE | 06
+| TRE DF | 07
+| TRE ES | 08
+| TRE GO | 09
+| TRE MA | 10
+| TRE MT | 11
+| TRE MS | 12
+| TRE MG | 13
+| TRE PA | 14
+| TRE PB | 15
+| TRE PR | 16
+| TRE PE | 17
+| TRE PI | 18
+| TRE RJ | 19
+| TRE RN | 20
+| TRE RS | 21
+| TRE RO | 22
+| TRE RR | 23
+| TRE SC | 24
+| TRE SE | 25
+| TRE SP | 26
+| TRE TO | 27
+
+#### Justiça Militar da União - Circunscrição Judiciária Militar
+
+Para a Justiça Militar da União a Circunscrições Judiciárias Militares adotam como (TR) os seguintes numeros:
+
+| tribunal | numero
+| --- | --- 
+| 1ª CJM UF | 01
+| 2ª CJM UF | 02
+| 3ª CJM UF | 03
+| 4ª CJM UF | 04
+| 5ª CJM UF | 05
+| 6ª CJM UF | 06
+| 7ª CJM UF | 07
+| 8ª CJM UF | 08
+| 9ª CJM UF | 09
+| 10ª CJM UF | 10
+| 11ª CJM UF | 11
+| 12ª CJM UF | 12
+
+#### Justiça dos Estados e do Distrito Federal e Territórios - Tribunal de Justiça
+
+Para a dos Estados e do Distrito Federal e Territórios os Tribunais de Justiça adotam como (TR) os seguintes numeros:
+
+| tribunal | numero
+| --- | --- 
+| TJ AC | 01
+| TJ AL | 02
+| TJ AP | 03
+| TJ AM | 04
+| TJ BA | 05
+| TJ CE | 06
+| TJ DF | 07
+| TJ ES | 08
+| TJ GO | 09
+| TJ MA | 10
+| TJ MT | 11
+| TJ MS | 12
+| TJ MG | 13
+| TJ PA | 14
+| TJ PB | 15
+| TJ PR | 16
+| TJ PE | 17
+| TJ PI | 18
+| TJ RJ | 19
+| TJ RN | 20
+| TJ RS | 21
+| TJ RO | 22
+| TJ RR | 23
+| TJ SC | 24
+| TJ SE | 25
+| TJ SP | 26
+| TJ TO | 27
+
+
+
+#### Justiça Militar Estadual, os Tribunais Militares dos Estados de Minas Gerais, Rio Grande do Sul e São Paulo
+
+Para a Justiça Militar Estadual, os Tribunais Militares dos Estados de Minas Gerais, Rio Grande do Sul e São Paulo adotam como (TR) os seguintes numeros:
+
+| tribunal | numero
+| --- | --- 
+| TM AC | 01
+| TM AL | 02
+| TM AP | 03
+| TM AM | 04
+| TM BA | 05
+| TM CE | 06
+| TM DF | 07
+| TM ES | 08
+| TM GO | 09
+| TM MA | 10
+| TM MT | 11
+| TM MS | 12
+| TM MG | 13
+| TM PA | 14
+| TM PB | 15
+| TM PR | 16
+| TM PE | 17
+| TM PI | 18
+| TM RJ | 19
+| TM RN | 20
+| TM RS | 21
+| TM RO | 22
+| TM RR | 23
+| TM SC | 24
+| TM SE | 25
+| TM SP | 26
+| TM TO | 27
+
+
+## Unidades de origem dos processos
+
+Para (OOOO), os tribunais devem codificar as suas respectivas unidades de origem do processo no primeiro grau de jurisdição (OOOO) com utilização dos números 0001 (um) a 8999 (oito mil, novecentos e noventa e nove), observando-se:
+- na Justiça Federal, as subseções judiciárias e as turmas recursais;
+- na Justiça do Trabalho, as varas do trabalho;
+- na Justiça Eleitoral, as zonas eleitorais;
+- na Justiça Militar da União, as auditorias militares;
+- na Justiça dos Estados, do Distrito Federal e dos Territórios, os foros de tramitação;
+- na Justiça Militar Estadual, as auditorias militares.
+
+
+## Notas
+
+> nos processos de competência originária dos tribunais, o campo (OOOO) deve ser preenchido com zero, facultada a utilização de funcionalidade que oculte a sua visibilidade e/ou torne desnecessário o seu preenchimento para a localização do processo;
+
+> nos processos de competência originária das turmas recursais, o primeiro algarismo do campo (OOOO) deve ser preenchido com o número 9 (nove), facultada a utilização dos demais campos para a identificação específica da turma recursal responsável pela tramitação do processo;
+
+> A Resolução preve que até 30 de junho de 2009, os tribunais devem encaminhar ao Conselho Nacional de Justiça, preferencialmente por meio eletrônico, relação das suas unidades de origem do processo (OOOO), com os respectivos códigos. Contudo, verifica-se que não há um uso correto do (OOOO) pelos tribunais.
+
+
+> Pela Resolução, os tribunais devem disponibilizar a relação das unidades de origem do processo (OOOO) nos seus respectivos sítios na rede mundial de computadores (internet), mas isso não é obedecido.
+
