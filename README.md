@@ -182,6 +182,10 @@ Verifica-se que o `id` é uma concatenação das variáveis `Tribunal`, `Classe`
 Um processo `00008323520184013202` vira `TJPR_7_G1_8789_00008323520184013202`, sendo `{Tribunal}_{Classe}_{Grau}_{OrgaoJulgador}_00008323520184013202`.
 Contudo, raramente há aderência integral ao formato definido pelo CNJ. O que se vê na prática é apenas a inclusão de `{Tribunal}_{Classe}_{NumeroProcesso}`.
 
+> [!Caution]
+> O Datajud não uniformiza o dados de data, há múltiplas representações para data/hora.
+> Há registros que adotam ISO completo (`YYYY-MM-DDTHH:MM:SS.mmmZ`) e outros Numérico 14 dígitos (`YYYYMMDDHHMMSS`).
+
 ### DJEN
 
 | Tabela | PK | Descrição |
@@ -275,6 +279,8 @@ uv run pytest -v
 ## Apendice
 
 ### Númeração única de processos no Pode Judiciário (NNNNNNN-DD.AAAA.J.TR.OOOO)
+
+A numeração dos processos judiciais segue o padrão definido pelo CNJ na [Resolução Nº 65 de 16/12/2008](https://atos.cnj.jus.br/atos/detalhar/119).
 
 O CNJ adota um racional de 6 campos obrigatórios (NNNNNNN-DD.AAAA.J.TR.OOOO), sendo:
  
