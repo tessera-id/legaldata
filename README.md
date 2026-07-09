@@ -70,9 +70,9 @@ Busca processos na API do DataJud e salva em DuckDB.
 
 ```bash
 # padrão para um processo
-legaldata datajud <numero do processo> -o <nome que quiser dar ao arquivo>.db
+legaldata datajud {numero do processo} -o {nome que quiser dar ao arquivo}.db
 # padrão para varios processos em um arquivo.csv
-legaldata datajud --casv <nome do arquivo>.csv -o <nome que quiser dar ao arquivo>.db
+legaldata datajud --csv {nome do arquivo}.csv -o {nome que quiser dar ao arquivo}.db
 ```
 
 Exemplos:
@@ -85,7 +85,7 @@ legaldata datajud 00008323520184013202 -o resultado.db
 legaldata datajud --csv processos.csv -o resultado.db
 ```
 
-> [!Importante]
+> [!Important]
 > O CSV deve ter um número por linha (20 dígitos, com ou sem formatação). 
 > Duplicatas são removidas automaticamente.
 
@@ -169,7 +169,18 @@ Arquivo DuckDB com até 6 tabelas:
 
 > [!Note]
 > O mesmo `numeroProcesso` CNJ pode ter múltiplos registros com graus distintos (G1, G2...). 
-> O campo `id` do DataJud (`Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso`) é a chave primária real.
+> O campo `id` do DataJud (`Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso`) é a chave primária real para individualização dos processos.
+
+Pelo Glossário do Datajud temos:
+
+| Atributos | Tipo | Descrição
+| --- | --- |
+| id | text/keyword | Identificador da origem do processo no Datajud - Chave Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso
+| numeroProcesso | text/keyword | Numeração Única (CNJ) do processo sem formatação
+
+Verifica-se que o `id` é uma concatenação das variáveis `Tribunal`, `Classe`, `Grau`, `OrgaoJulgador`, e `NumeroProcesso`.
+Um processo `00008323520184013202` vira `TJPR_7_G1_8789_00008323520184013202`, sendo `{Tribunal}_{Classe}_{Grau}_{OrgaoJulgador}_00008323520184013202`.
+Contudo, raramente há aderência integral ao formato definido pelo CNJ. O que se vê na prática é apenas a inclusão de `{Tribunal}_{Classe}_{NumeroProcesso}`.
 
 ### DJEN
 
@@ -184,7 +195,19 @@ Todas as tabelas DJEN incluem a coluna `processo` (número CNJ) para join direto
 >[!Caution]
 > Os Tribunais não têm cuidado na aderência com o contrato de API do DJEN e exitem erros.
 > É comum que Tribunais com EPROC lancem o numero da OAB do advogado de forma errada.
+> O contrato de de API do DJEN define que são dois campos um `numeroOab` para os numeros e 
+> um `ufOab` para a sigla da unidade da federação da seccional da OAB que emitiu o registro.
+> Ou seja, os dados são `numeroOab : 000000` e `ufOab: AA`. 
+> Contudo, os Tribunais que usam EPROC lançam errado do dado na variavel `numeroOab: AA000000`.
+> Como esta variável é uma `string`, esta violação causa problemas de identificação da publicações.
+
+>[!Caution]
+> Os Tribunais não têm cuidado na aderência com o contrato de API do DJEN e exitem erros.
 > É comum que o nome das partes tenha variações e esteja incorreto.
+
+>[!Caution]
+> Os Tribunais não têm cuidado no lançamento dos textos das publicações.
+> É comum que o texto contenha traços de HTML, demonstrando ausencia de cuidado no pré-processamento dos dados.
 
 ### Exemplos de consulta
 
