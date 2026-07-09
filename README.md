@@ -244,8 +244,8 @@ ORDER BY c.data_disponibilizacao DESC;
 | Segmento | Cobertura |
 |----------|-----------|
 | Justiça Estadual | AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP TO |
-| Justiça do Trabalho | TRT 1–24 |
-| Justiça Federal | TRF 1–6 |
+| Justiça do Trabalho | TRT 1 a 24 |
+| Justiça Federal | TRF 1 a 6 |
 
 O mapeamento completo de códigos CNJ e endpoints está em `src/legaldata/tribunais.toml`.
 
