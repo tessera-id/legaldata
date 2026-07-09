@@ -95,6 +95,8 @@ legaldata datajud --csv processos.csv -o resultado.db
 
 Fetch concorrente com 30 workers + retry automático (5 workers após 15s) em caso de 429/timeout.
 
+Mais informações sobre o Datajud em https://datajud-wiki.cnj.jus.br/.
+
 ---
 
 ### `djen` — DJEN
@@ -110,6 +112,8 @@ legaldata djen resultado.db --csv processos.csv
 ```
 
 Execução sequencial com 1s de intervalo entre requests (rate limit público).
+
+Mais informações sobre o DJEN em https://comunicaapi.pje.jus.br/swagger/index.html
 
 ---
 
