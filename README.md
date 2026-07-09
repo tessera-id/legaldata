@@ -175,8 +175,8 @@ Pelo Glossário do Datajud temos:
 
 | Atributos | Tipo | Descrição |
 | --------- | ---- | --------- |
-| id | text/keyword | Identificador da origem do processo no Datajud - Chave Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso |
-| numeroProcesso | text/keyword | Numeração Única (CNJ) do processo sem formatação |
+| `id` | text/keyword | Identificador da origem do processo no Datajud - Chave `Tribunal_Classe_Grau_OrgaoJulgador_NumeroProcesso` |
+| `numeroProcesso` | text/keyword | Numeração Única (CNJ) do processo sem formatação |
 
 Verifica-se que o `id` é uma concatenação das variáveis `Tribunal`, `Classe`, `Grau`, `OrgaoJulgador`, e `NumeroProcesso`.
 Um processo `00008323520184013202` vira `TJPR_7_G1_8789_00008323520184013202`, sendo `{Tribunal}_{Classe}_{Grau}_{OrgaoJulgador}_00008323520184013202`.
