@@ -86,6 +86,7 @@ def _insert_records(con: duckdb.DuckDBPyConnection, records: list[dict], progres
         )
 
         movimentos = rec.get("movimentos") or []
+        movimentos = sorted(movimentos, key=lambda m: parse_datetime(m.get("dataHora")) or "")
         for seq, mov in enumerate(movimentos, start=1):
             complementos = (mov.get("complementosTabelados") or [{}])
             comp = complementos[0] if complementos else {}
